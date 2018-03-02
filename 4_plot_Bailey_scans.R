@@ -3,7 +3,7 @@ library(gridExtra)
 library(grid)
 library(ggplot2)
 
-bailey_replication <- readRDS('Bailey_scans_1000_perms.RDS')
+bailey_replication <- readRDS('Bailey_scans_1000_perms_smaller_files.RDS')
 
 sos <- bailey_replication$so
 sops <- bailey_replication$sop
