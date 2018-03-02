@@ -75,9 +75,9 @@ for (phen_name in phen_names) {
 
   so[[phen_name]] <- scanone(cross = c, pheno.col = phen_name, addcovar = as.numeric(c$pheno$SEX))
 
-  # sov[[phen_name]] <- scanonevar(cross = c,
-  #                                mean.formula = formula(paste0(phen_name, '~ SEX + mean.QTL.add + mean.QTL.dom')),
-  #                                var.formula = ~ SEX  + var.QTL.add + var.QTL.dom)
+  sov[[phen_name]] <- scanonevar(cross = c,
+                                 mean.formula = formula(paste0(phen_name, '~ SEX + mean.QTL.add + mean.QTL.dom')),
+                                 var.formula = ~ SEX  + var.QTL.add + var.QTL.dom)
 
   if (num_perms) {
 
@@ -86,8 +86,8 @@ for (phen_name in phen_names) {
     sop[[phen_name]] <- scanone(cross = c, pheno.col = phen_name, addcovar = as.numeric(c$pheno$SEX), n.perm = num_perms, n.cluster = num_cores, verbose = FALSE)
     evd <- fgev(x = sop[[phen_name]])
     so[[phen_name]]$empir.p <- PGEV(q = so[[phen_name]]$lod, gev = evd, lower.tail = FALSE)
-    #
-    # sov[[phen_name]] <- scanonevar.perm(sov = sov[[phen_name]], n.perms = num_perms, n.cores = num_cores, random.seed = 27599)
+
+    sov[[phen_name]] <- scanonevar.perm(sov = sov[[phen_name]], n.perms = num_perms, n.cores = num_cores, random.seed = 27599)
   }
 
 }

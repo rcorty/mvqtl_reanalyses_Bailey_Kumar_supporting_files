@@ -59,8 +59,7 @@ ggsave(plot = g, filename = 'bailey_plots/bailey_scans_bc.pdf', height = 11, wid
 
 
 
-
-
+# scanones and scanonevars on RINT transformed traits
 rint_phen_names <- paste0('rint_', c('TOTDIST', 'AMBEPIS', 'PCTREST', 'PCTT10', 'AVGVELO', 'TOTREAR'))
 names(plotting_names) <- rint_phen_names
 
@@ -69,11 +68,7 @@ g <- arrangeGrob(grobs = gs, ncol = 1)
 ggsave(plot = g, filename = 'bailey_plots/bailey_scans_rint.pdf', height = 11, width = 8)
 
 
-
-
-
-
-
+# scanonevar for other transforms of TOTREAR
 plot(x = sovs$TOTREAR)
 ggsave(filename = 'bailey_plots/TOTREAR_no_transform.pdf', height = 1.5, width = 6)
 
@@ -86,3 +81,48 @@ ggsave(filename = 'bailey_plots/TOTREAR_sqrt.pdf', height = 1.5, width = 6)
 plot(x = sovs$TOTREAR_poisson)
 ggsave(filename = 'bailey_plots/TOTREAR_poisson.pdf', height = 1.5, width = 6)
 
+
+
+
+# phenotype at top marker plot
+library(ggplot2)
+c$pheno$sex <- factor(x = c$pheno$SEX, labels = c('female', 'male'))
+phenotype_at_marker_plot(cross = c,
+                         phenotype_name = 'bc_TOTREAR',
+                         marker_name = '2.65.484',
+                         color_by = 'sex',
+                         genotype_labels = c('B6', 'Het', 'C58')) +
+  xlab('Chr 2, 65Mb marker') +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  ggtitle(label = 'Rearing Behavior (counts)')
+ggsave(filename = 'bailey_plots/TOTREAR_bc_phen_plot.pdf', height = 4, width = 5)
+
+
+# mean_var_plot
+c$pheno$chr2_marker <- factor(c$geno$`2`$data[,'2.65.484'])
+
+totrear_lm <- lm(formula = bc_TOTREAR ~ SEX + chr2_marker,
+                 data = c$pheno,
+                 na.action = na.exclude)
+
+summary(totrear_lm)
+
+lm_pred <- data.frame(sex = c$pheno$SEX, chr2_marker = c$pheno$chr2_marker)
+lm_pred$lm_pred <- predict(object = totrear_lm)
+lm_pred$sigma <- sd(residuals(totrear_lm), na.rm = TRUE)
+
+
+
+mean_var_plot_model_based(cross = c,
+                          phenotype.name = 'bc_TOTREAR',
+                          focal.groups = c('sex', 'chr2_marker'),
+                          point_size = 3,
+                          title = 'Mean and Variance Effect Estimates\nfor Rearing Events',
+                          genotype.names = c('B6', 'Het', 'C58')) +
+  geom_point(data = unique(lm_pred),
+             mapping = aes(x = lm_pred, y = sigma), color = 'black', shape = 4, size = 3) +
+  scale_shape(name = 'chr 2,\n65Mb marker') +
+  scale_color_discrete(name = 'Sex') +
+  theme(legend.background = element_rect(fill = 'white'))
+ggsave(filename = 'bailey_plots/TOTREAR_bc_mean_var_plot.pdf', height = 4, width = 5)
