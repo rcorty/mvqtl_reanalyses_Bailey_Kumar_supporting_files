@@ -70,16 +70,16 @@ ggsave(plot = g, filename = 'bailey_plots/bailey_scans_rint.pdf', height = 11, w
 
 # scanonevar for other transforms of TOTREAR
 plot(x = sovs$TOTREAR)
-ggsave(filename = 'bailey_plots/TOTREAR_no_transform.pdf', height = 1.5, width = 6)
+ggsave(filename = 'bailey_plots/TOTREAR_no_transform.pdf', height = 1.5, width = 8)
 
 plot(x = sovs$log_TOTREAR)
-ggsave(filename = 'bailey_plots/TOTREAR_log.pdf', height = 1.5, width = 6)
+ggsave(filename = 'bailey_plots/TOTREAR_log.pdf', height = 1.5, width = 8)
 
 plot(x = sovs$sqrt_TOTREAR)
-ggsave(filename = 'bailey_plots/TOTREAR_sqrt.pdf', height = 1.5, width = 6)
+ggsave(filename = 'bailey_plots/TOTREAR_sqrt.pdf', height = 1.5, width = 8)
 
 plot(x = sovs$TOTREAR_poisson)
-ggsave(filename = 'bailey_plots/TOTREAR_poisson.pdf', height = 1.5, width = 6)
+ggsave(filename = 'bailey_plots/TOTREAR_poisson.pdf', height = 1.5, width = 8)
 
 
 
