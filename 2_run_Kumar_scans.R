@@ -19,7 +19,7 @@ PGEV <- function(q, gev, ...) {
 
 MPD_URL <- 'https://phenomedoc.jax.org/QTL_Archive/kumar_2014/Kumar2014_Data.csv'
 c <- read.cross(format = 'csv',  file = url(description = MPD_URL))
-c <- calc.genoprob(cross = c, step = 5)
+c <- calc.genoprob(cross = c, step = 2)
 
 
 # LL at lambda=1 is close enough to maxLL that it's reasonable not to transform
