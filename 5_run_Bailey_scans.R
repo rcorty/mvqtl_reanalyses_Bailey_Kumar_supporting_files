@@ -25,7 +25,7 @@ MPD_URL <- 'https://phenomedoc.jax.org/QTL_Archive/bailey_2008/Bailey2008_B6xC58
 c <- read.cross(format = 'csv',  file = url(description = MPD_URL),
                 genotypes = c('B', 'H', 'C'),
                 na.strings = c('O', '-'))
-c <- calc.genoprob(cross = jittermap(object = c), step = 2)
+c <- calc.genoprob(cross = jittermap(object = c), step = 5)
 
 # trim extreme outliers
 c$pheno$PCTT10[c$pheno$PCTT10 > 60] <- NA
@@ -108,3 +108,14 @@ saveRDS(object = list(so = so,
                       sov = sov),
         file = paste0('Bailey_scans_', num_perms, '_permsc.RDS'))
 
+
+
+colnames(c$geno$`2`$data) <- paste0('chr', colnames(c$geno$`2`$data))
+colnames(c$geno$`2`$prob) <- paste0('chr', colnames(c$geno$`2`$prob))
+names(c$geno$`2`$map) <- paste0('chr', names(c$geno$`2`$map))
+
+str(c$geno$`2`$prob)
+
+sov <- scanonevar(cross = c,
+                  mean.formula = bc_TOTREAR ~ SEX + mean.QTL.add + mean.QTL.dom + chr2.65.484_add,
+                  var.formula = ~ SEX + var.QTL.add + var.QTL.dom)

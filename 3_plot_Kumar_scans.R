@@ -2,7 +2,6 @@ library(vqtl)
 library(ggplot2)
 library(dplyr)
 
-
 MPD_URL <- 'https://phenomedoc.jax.org/QTL_Archive/kumar_2014/Kumar2014_Data.csv'
 c <- read.cross(format = 'csv',  file = url(description = MPD_URL))
 
@@ -14,8 +13,9 @@ sovs <- readRDS(file = 'Kumar_scans_1000_perms.RDS')[['sov']]
 
 
 # cocaine response scans
-plot(x = sovs$X130avg, y = sos$X130avg, plot.title = '30 Minute Cocaine Response', alpha_size = 2)
-ggsave(filename = 'Kumar_30min_cocaine_scan.pdf', width = 10, height = 2)
+plot(x = sovs$X130avg, y = sos$X130avg, plot.title = '30 Minute Cocaine Response', chr = 11:20, alpha_size = 3, alpha_chr = 20) +
+  scale_color_manual(labels = c('mQTL', 'vQTL', 'mvQTL', 'SLM'), values = c('blue', 'red', 'black', 'darkgreen'))
+ggsave(filename = 'Kumar_30min_cocaine_scan.pdf', width = 8, height = 2)
 
 plot(x = sovs$X1sum.60min, y = sos$X1sum.60min, plot.title = '60 Minute Cocaine Response', alpha_size = 2)
 ggsave(filename = 'Kumar_60min_cocaine_scan.pdf', width = 10, height = 2)
@@ -23,16 +23,20 @@ ggsave(filename = 'Kumar_60min_cocaine_scan.pdf', width = 10, height = 2)
 
 
 # average counts scan
-plot(x = sovs$Avg_Counts, y = sos$Avg_Counts, plot.title = 'Circadian Wheel Running Activity (revolutions/minute)', alpha_size = 2)
-ggsave(filename = 'Kumar_avg_counts_scan.pdf', width = 10, height = 2)
+plot(x = sovs$Avg_Counts, y = sos$Avg_Counts,
+     plot.title = 'Circadian Wheel Running Activity (revolutions/minute)', alpha_size = 3, chrs = 1:10) +
+  scale_color_manual(labels = c('mQTL', 'vQTL', 'mvQTL', 'SLM'), values = c('blue', 'red', 'black', 'darkgreen'))
+ggsave(filename = 'Kumar_avg_counts_scan.pdf', width = 8, height = 2)
 
 
 # data for chr 6 QTL
 sov$Avg_Counts$result %>% filter(mQTL.empir.p < 0.01)
 
 # zoom to chromosome 6
-plot(x = sovs$Avg_Counts, y = sos$Avg_Counts, chrs = 6, plot.title = 'Circadian Wheel Running Activity (revolutions/minute)', legend_pos = 'none', alpha_pos = 'right')
-ggsave(filename = 'Kumar_avg_counts_chr6.pdf', width = 3, height = 4)
+plot(x = sovs$Avg_Counts, y = sos$Avg_Counts, chrs = 6,
+     plot.title = 'Circadian Wheel Running Activity\n(revolutions/minute)',
+     legend_pos = c(0.6, 0.5), alpha_pos = 'right')
+ggsave(filename = 'Kumar_avg_counts_chr6.pdf', width = 4, height = 3)
 
 
 
@@ -49,7 +53,8 @@ phenotype_at_marker_plot(cross = c,
                          marker_name = 'rs30314218',
                          color_by = 'sex',
                          # shape_by = 'in_actogram',
-                         point_size = 'in_actogram',
+                         # point_size = 'in_actogram',
+                         point_size = 2,
                          point_alpha = 0.7,
                          genotype_labels = c('C57BL/6J', 'Het', 'C57BL/6N')) +
   xlab('chr6, rs30314218') +
@@ -85,9 +90,10 @@ mean_var_plot_model_based(cross = c,
                           focal.groups = c('sex', 'rs30314218'),
                           point_size = 4,
                           title = 'Mean and Variance Effect Estimates for\n Circadian Wheel Running Activity (revolutions/minute)',
-                          genotype.names = c('C57BL/6J', 'Het', 'C57BL/6N')) +
-  geom_point(data = unique(lm_pred),
-             mapping = aes(x = lm_pred, y = sigma), color = 'black', shape = 4, size = 3)
+                          genotype.names = c('C57BL/6J', 'Het', 'C57BL/6N'))
+# +
+#   geom_point(data = unique(lm_pred),
+#              mapping = aes(x = lm_pred, y = sigma), color = 'black', shape = 4, size = 3)
 ggsave(filename = 'Kumar_avg_counts_mean_var_plot.pdf', height = 4, width = 5)
 
 
